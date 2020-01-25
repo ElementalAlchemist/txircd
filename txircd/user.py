@@ -93,6 +93,7 @@ class IRCUser(IRCBase):
 	
 	def _callConnectAction(self) -> None:
 		self._connectHandlerTimer = None
+		self.ircd.log.debug("User connected from {ip}", ip=ipAddressToShow(self.ip))
 		if self.ircd.runActionUntilFalse("userconnect", self, users=[self]):
 			self.transport.loseConnection()
 		else:
