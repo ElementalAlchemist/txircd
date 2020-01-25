@@ -888,9 +888,9 @@ class RemoteUser(IRCUser):
 			return
 		if holdName not in self._registerHolds:
 			return
-		self.ircd.log.debug("Registered remote user {user.uuid} ({userHostmask()})", user=self, userHostmask=self.hostmask)
 		self._registerHolds.remove(holdName)
 		if not self._registerHolds:
+			self.ircd.log.debug("Registered remote user {user.uuid} ({userHostmask()})", user=self, userHostmask=self.hostmask)
 			self.ircd.runActionStandard("remoteregister", self, users=[self])
 			self.ircd.userNicks[self.nick] = self
 	
