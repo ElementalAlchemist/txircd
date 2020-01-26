@@ -93,7 +93,7 @@ class IRCUser(IRCBase):
 	
 	def _callConnectAction(self) -> None:
 		self._connectHandlerTimer = None
-		self.ircd.log.debug("User connected from {ip}", ip=ipAddressToShow(self.ip))
+		self.ircd.log.debug("User {user.uuid} connected from {ip}", user=self, ip=ipAddressToShow(self.ip))
 		if self.ircd.runActionUntilFalse("userconnect", self, users=[self]):
 			self.transport.loseConnection()
 		else:
@@ -920,6 +920,7 @@ class RemoteUser(IRCUser):
 			userSendList.extend(channel.users.keys())
 			self._leaveChannel(channel, "QUIT", { "reason": reason })
 		userSendList = [u for u in set(userSendList) if u.uuid[:3] == self.ircd.serverID]
+		self.ircd.log.debug("Removing remote user {user.uuid} ({userHostmask()})", user=self, userHostmask=self.hostmask)
 		self.ircd.runActionStandard("remotequit", self, reason, fromServer, users=[self], allowDisconnected=True)
 		return userSendList
 	
