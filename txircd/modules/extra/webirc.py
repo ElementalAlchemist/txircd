@@ -81,7 +81,7 @@ class WebIRC(ModuleData, Command):
 	
 	def useIPFallback(self, user: "IRCUser", host: str, requestIP: str) -> None:
 		self.ircd.log.warn("DNS resolution for WEBIRC command from IP \"{userip}\" with requested IP \"{requestip}\" and requested host \"{requesthost}\" has failed; using the requested IP address as the host instead.", user=user, userip=ipAddressToShow(user.ip), requestip=requestIP, requesthost=host)
-		user.ip = ip_address(requestIP)
+		user.changeIP(ip_address(requestIP))
 		user.realHost = requestIP
 
 webirc = WebIRC()
