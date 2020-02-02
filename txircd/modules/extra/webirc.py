@@ -68,7 +68,7 @@ class WebIRC(ModuleData, Command):
 	
 	def checkDNS(self, result: str, user: "IRCUser", host: str, requestIP: str) -> None:
 		if result == requestIP:
-			self.ircd.log.info("WEBIRC detected for IP \"{userip}\"; changing {user.nick}'s IP to \"{requestip}\" and their real host to \"{requesthost}\".", user=user, userip=ipAddressToShow(user.ip), requestip=requestIP, requesthost=host)
+			self.ircd.log.info("WEBIRC detected for IP \"{userip}\"; changing {user.uuid}'s IP to \"{requestip}\" and their real host to \"{requesthost}\".", user=user, userip=ipAddressToShow(user.ip), requestip=requestIP, requesthost=host)
 			user.changeIP(ip_address(requestIP))
 			user.realHost = host
 			user.register("WEBIRC")
