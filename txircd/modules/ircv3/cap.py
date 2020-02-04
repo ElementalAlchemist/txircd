@@ -72,7 +72,13 @@ class Cap(ModuleData, Command):
 			return None
 		subcmd = params[0].upper()
 		if subcmd == "LS":
-			if len(params) == 1:
+			version = None
+			if len(params) > 1:
+				try:
+					version = int(params[1])
+				except:
+					pass
+			if version is None:
 				return {
 					"subcmd": "LS"
 				}
@@ -115,7 +121,7 @@ class Cap(ModuleData, Command):
 		if subCmd == "LS":
 			if "version" in data:
 				version = data["version"]
-				if version == "302":
+				if version >= 302:
 					user.cache["capversion"] = 302
 					user.cache["capabilities"]["cap-notify"] = None
 			capList = []
