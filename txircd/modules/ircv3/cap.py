@@ -121,8 +121,8 @@ class Cap(ModuleData, Command):
 		if subCmd == "LS":
 			if "version" in data:
 				version = data["version"]
+				user.cache["capversion"] = 302
 				if version >= 302:
-					user.cache["capversion"] = 302
 					user.cache["capabilities"]["cap-notify"] = None
 			capList = []
 			self.ircd.runActionStandard("capabilitylist", user, capList)
