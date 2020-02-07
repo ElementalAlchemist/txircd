@@ -22,9 +22,10 @@ class IRCServer(IRCBase):
 		self._burstQueueCommands = []
 		self._burstQueueCommandPriorities = {}
 		self._burstQueueHandlers = {}
+		self._disconnected = False
 	
 	def handleCommand(self, command: str, params: List[str], prefix: str, tags: Dict[str, Optional[str]]) -> None:
-		if self.bursted and self.serverID not in self.ircd.servers:
+		if self._disconnected:
 			return # Don't process leftover commands for disconnected servers
 		if command not in self.ircd.serverCommands:
 			self.disconnect("Unknown command {}".format(command)) # If we receive a command we don't recognize, abort immediately to avoid a desync
@@ -142,6 +143,7 @@ class IRCServer(IRCBase):
 		if self._registrationTimeoutTimer.active():
 			self._registrationTimeoutTimer.cancel()
 		self._endConnection()
+		self._disconnected = True
 	
 	def _endConnection(self) -> None:
 		self.transport.loseConnection()
