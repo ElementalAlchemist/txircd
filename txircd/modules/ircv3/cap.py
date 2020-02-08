@@ -84,7 +84,7 @@ class Cap(ModuleData, Command):
 				}
 			return {
 				"subcmd": "LS",
-				"version": params[1]
+				"version": version
 			}
 		if subcmd == "LIST":
 			return {
