@@ -55,7 +55,7 @@ class JoinChannel(Command):
 			if not chanName:
 				user.sendBatchedError("JoinCmd", irc.ERR_BADCHANMASK, "*", "Bad channel mask")
 				removeIndices.append(index)
-			if chanName[0] != "#":
+			elif chanName[0] != "#":
 				user.sendBatchedError("JoinCmd", irc.ERR_BADCHANMASK, chanName, "Bad channel mask")
 				removeIndices.append(index)
 		removeIndices.sort()
