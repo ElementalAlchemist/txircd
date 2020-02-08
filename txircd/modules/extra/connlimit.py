@@ -20,7 +20,8 @@ class ConnectionLimit(ModuleData):
 
 	def load(self) -> None:
 		for user in self.ircd.users.values():
-			self.addToConnections(ipAddressToShow(user.ip))
+			if not user.localOnly:
+				self.addToConnections(ipAddressToShow(user.ip))
 
 	def verifyConfig(self, config: Dict[str, Any]) -> None:
 		if "connlimit_globmax" in config and (not isinstance(config["connlimit_globmax"], int) or config["connlimit_globmax"] < 0):
