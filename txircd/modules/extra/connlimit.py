@@ -40,7 +40,7 @@ class ConnectionLimit(ModuleData):
 		if self.addToConnections(ip) and self.peerConnections[ip] > self.ircd.config.get("connlimit_globmax", 3):
 			self.ircd.log.info("Connection limit reached from {ip}", ip=ip)
 			user.disconnect("No more connections allowed from your IP ({})".format(ip))
-			return None
+			return False
 		return True
 
 	def handleRemoteConnect(self, user: "IRCUser", *params: Any) -> None:
