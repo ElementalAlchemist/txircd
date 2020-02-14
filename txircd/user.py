@@ -46,6 +46,7 @@ class IRCUser(IRCBase):
 		self._pinger = LoopingCall(self._ping)
 		self._registrationTimeoutTimer = reactor.callLater(registrationTimeout, self._timeoutRegistration)
 		self._connectHandlerTimer = None
+		self._preconnectCommands = []
 		self._startDNSResolving(registrationTimeout)
 	
 	def _startDNSResolving(self, timeout: int) -> None:
@@ -96,8 +97,12 @@ class IRCUser(IRCBase):
 		self.ircd.log.debug("User {user.uuid} connected from {ip}", user=self, ip=ipAddressToShow(self.ip))
 		if self.ircd.runActionUntilFalse("userconnect", self, users=[self]):
 			self.transport.loseConnection()
-		else:
-			self.register("connection")
+			return
+		self.register("connection")
+		commandsToExecute = self._preconnectCommands
+		self._preconnectCommands = None
+		for commandData in commandsToExecute:
+			self.handleCommand(*commandData)
 	
 	def dataReceived(self, data: bytes) -> None:
 		self.ircd.runActionStandard("userrecvdata", self, data, users=[self])
@@ -144,6 +149,9 @@ class IRCUser(IRCBase):
 	def handleCommand(self, command: str, params: List[str], prefix: str, tags: Dict[str, Optional[str]]) -> None:
 		if self.uuid not in self.ircd.users:
 			return # we have been disconnected - ignore all further commands
+		if self._preconnectCommands is not None:
+			self._preconnectCommands.append((command, params, prefix, tags))
+			return
 		if command in self.ircd.userCommands:
 			handlers = self.ircd.userCommands[command]
 			if not handlers:
