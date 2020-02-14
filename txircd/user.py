@@ -74,7 +74,7 @@ class IRCUser(IRCBase):
 	def _completeDNSResolution(self, result: Tuple[List["RRHeader"], List["RRHeader"], List["RRHeader"]], name: str) -> None:
 		addressResults = result[0]
 		for addressData in addressResults:
-			if addressData.payload.address == self.ip.packed:
+			if hasattr(addressData.payload, "address") and addressData.payload.address == self.ip.packed:
 				self.realHost = name
 				break
 		self.register("dns")
