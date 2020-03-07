@@ -102,9 +102,9 @@ class IRCServer(IRCBase):
 		Disconnects the server.
 		"""
 		if self.nextClosest == self.ircd.serverID:
-			self.ircd.log.warn("Disconnecting server {server.name}: {reason}", server=self, reason=reason)
+			self.ircd.log.warn("Disconnecting server {server.serverID} ({server.name}): {reason}", server=self, reason=reason)
 		else:
-			self.ircd.log.warn("Removing server {server.name}: {reason}", server=self, reason=reason)
+			self.ircd.log.warn("Removing server {server.serverID} ({server.name}): {reason}", server=self, reason=reason)
 		self.ircd.runActionStandard("serverquit", self, reason)
 		self.bursted = None
 		if self.serverID in self.ircd.servers:
@@ -170,6 +170,7 @@ class IRCServer(IRCBase):
 		self.ircd.servers[self.serverID] = self
 		self.ircd.serverNames[self.name] = self
 		self.ircd.runActionStandard("serverconnect", self)
+		self.ircd.log.info("Registered server {server.serverID} ({server.name})", server=self)
 		if self.nextClosest != self.ircd.serverID:
 			self.bursted = True # Indicate that this server is fully connected and synced NOW since it's a remote server and we've either already gotten or are about to get all the interesting tidbits
 
