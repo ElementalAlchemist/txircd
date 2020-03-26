@@ -204,7 +204,6 @@ class BanMode(ModuleData, Mode):
 	
 	def checkSet(self, channel: "IRCChannel", param: str) -> Optional[List[str]]:
 		actionExtban = ""
-		actionParam = ""
 		matchingExtban = ""
 		validParams = []
 		for fullBanmask in param.split(","):
@@ -213,6 +212,7 @@ class BanMode(ModuleData, Mode):
 				actionExtban, banmask = banmask.split(";", 1)
 				if not actionExtban or not banmask:
 					continue
+				actionParam = ""
 				if ":" in actionExtban:
 					actionExtban, actionParam = actionExtban.split(":", 1)
 					if not actionParam:
