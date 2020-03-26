@@ -80,7 +80,7 @@ class BanMode(ModuleData, Mode):
 			match = self.banMatchesUser(user, param)
 			if match:
 				if actionNegated:
-					return None
+					return False
 				return actionParam
 		return None
 	
