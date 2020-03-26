@@ -60,6 +60,8 @@ class BanMode(ModuleData, Mode):
 		if user in channel.users and "bans" in channel.users[user]:
 			if mode in channel.users[user]["bans"]:
 				return channel.users[user]["bans"][mode]
+			if "~{}".format(mode) in channel.users[user]["bans"]:
+				return False
 			return None
 		for paramData in channel.modes["b"]:
 			param = paramData[0]
