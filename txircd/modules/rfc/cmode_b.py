@@ -65,10 +65,11 @@ class BanMode(ModuleData, Mode):
 			param = paramData[0]
 			actionExtban = ""
 			actionParam = ""
-			if ";" in param:
-				actionExtban, param = param.split(";", 1)
-				if ":" in actionExtban:
-					actionExtban, actionParam = actionExtban.split(":", 1)
+			if ";" not in param:
+				continue
+			actionExtban, param = param.split(";", 1)
+			if ":" in actionExtban:
+				actionExtban, actionParam = actionExtban.split(":", 1)
 			actionNegated = False
 			if actionExtban[0] == "~":
 				actionNegated = True
