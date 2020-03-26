@@ -71,10 +71,16 @@ class BanMode(ModuleData, Mode):
 				actionExtban, param = param.split(";", 1)
 				if ":" in actionExtban:
 					actionExtban, actionParam = actionExtban.split(":", 1)
+			actionNegated = False
+			if actionExtban[0] == "~":
+				actionNegated = True
+				actionExtban = actionExtban[1:]
 			if actionExtban != mode:
 				continue
 			match = self.banMatchesUser(user, param)
 			if match:
+				if actionNegated:
+					return None
 				return actionParam
 		return None
 	
