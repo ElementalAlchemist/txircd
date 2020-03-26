@@ -232,7 +232,9 @@ class BanMode(ModuleData, Mode):
 					continue
 				if not matchNegated and not actionParam and actionModeType == ModeType.Param:
 					continue
-				if actionModeType != ModeType.Status: # Don't check the parameters for status modes, but do the rest of the processing
+				# Don't check the parameters for status modes, but do the rest of the processing
+				# Also don't check parameters for negated param modes (for which a parameter shouldn't be specified)
+				if actionModeType != ModeType.Status and not (matchNegated and actionModeType == ModeType.Param):
 					actionParamList = self.ircd.channelModes[actionModeType][actionExtban].checkSet(channel, actionParam)
 					for actionParam in actionParamList:
 						updatedBanmask = "{}:{};{}".format(actionExtban, actionParam, banmask)
