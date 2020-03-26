@@ -56,9 +56,7 @@ class BanMode(ModuleData, Mode):
 		if "b" not in channel.modes:
 			return None
 		if mode == "b":
-			if "b" in channel.modes:
-				return "" # We'll handle the iteration
-			return None
+			return "" # We'll handle the iteration
 		if user in channel.users and "bans" in channel.users[user]:
 			if mode in channel.users[user]["bans"]:
 				return channel.users[user]["bans"][mode]
