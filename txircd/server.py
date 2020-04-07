@@ -107,6 +107,7 @@ class IRCServer(IRCBase):
 			self.ircd.log.warn("Removing server {server.serverID} ({server.name}): {reason}", server=self, reason=reason)
 		self.ircd.runActionStandard("serverquit", self, reason)
 		self.bursted = None
+		self._disconnected = True
 		if self.serverID in self.ircd.servers:
 			if netsplitFromServerName is None or netsplitToServerName is None:
 				netsplitFromServerName = self.ircd.servers[self.nextClosest].name if self.nextClosest in self.ircd.servers else self.ircd.name
@@ -143,7 +144,6 @@ class IRCServer(IRCBase):
 		if self._registrationTimeoutTimer.active():
 			self._registrationTimeoutTimer.cancel()
 		self._endConnection()
-		self._disconnected = True
 	
 	def _endConnection(self) -> None:
 		self.transport.loseConnection()
