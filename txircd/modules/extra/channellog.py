@@ -123,11 +123,11 @@ class ChannelLog(ModuleData):
 	def logJoin(self, channel: "IRCChannel", user: "IRCUser", fromServer: "IRCServer" = None) -> None:
 		self.logLine(channel, "> {} has joined {}".format(user.nick, channel.name))
 	
-	def logLeave(self, channel: "IRCChannel", user: "IRCUser", partType: str, typeData: Dict[Any, Any]) -> None:
+	def logLeave(self, channel: "IRCChannel", user: "IRCUser", partType: str, typeData: Dict[str, Any]) -> None:
 		if partType == "QUIT":
 			self.logLine(channel, "> {} has quit: {}".format(user.nick, typeData["reason"]))
 		elif partType == "KICK":
-			self.logLine(channel, "> {} has been kicked from {} by {}: {}".format(user.nick, channel.name, typeData["user"].nick if typeData["byuser"] in typeData else typeData["server"].name, typeData["reason"]))
+			self.logLine(channel, "> {} has been kicked from {} by {}: {}".format(user.nick, channel.name, typeData["user"].nick if typeData["byuser"] else typeData["server"].name, typeData["reason"]))
 		else:
 			if "reason" in typeData and typeData["reason"]:
 				self.logLine(channel, "> {} has left {}: {}".format(user.nick, channel.name, typeData["reason"]))
