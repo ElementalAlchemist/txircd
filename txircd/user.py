@@ -681,7 +681,7 @@ class IRCUser(IRCBase):
 		modeChanges = []
 		defaultSourceName = self._sourceName(defaultSource)
 		if defaultSourceName is None:
-			raise ValueError ("Source must be a valid user or server ID.")
+			raise ValueError (f"Source must be a valid user or server ID (got {defaultSource})")
 		nowTime = now()
 		for modeData in modes:
 			mode = modeData[1]
