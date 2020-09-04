@@ -270,7 +270,7 @@ class ServerMode(Command):
 			if targetTime > channel.existedSince:
 				return True
 			if targetTime < channel.existedSince:
-				channel.setCreationTime(targetTime)
+				channel.setCreationTime(targetTime, server)
 			# We'll need to transform the user parameters of status modes before we're done here
 			channel.setModes(data["modes"], source)
 			return True
