@@ -915,7 +915,7 @@ class RemoteUser(IRCUser):
 			userSendList.extend(channel.users.keys())
 			self._leaveChannel(channel, "QUIT", { "reason": reason })
 		userSendList = [u for u in set(userSendList) if u.uuid[:3] == self.ircd.serverID]
-		self.ircd.log.debug("Removing remote user {user.uuid} ({userHostmask()}) [from {serverID}]: {reason}", user=self, userHostmask=self.hostmask, serverid=fromServer.serverID if fromServer else "local server", reason=reason)
+		self.ircd.log.debug("Removing remote user {user.uuid} ({userHostmask()}) [from {serverID}]: {reason}", user=self, userHostmask=self.hostmask, serverID=fromServer.serverID if fromServer else "local server", reason=reason)
 		self.ircd.runActionStandard("remotequit", self, reason, fromServer, users=[self], allowDisconnected=True)
 		return userSendList
 	
