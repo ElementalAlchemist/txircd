@@ -635,9 +635,9 @@ class IRCUser(IRCBase):
 		"""
 		channel = joinChannelData["channel"]
 		fromServer = joinChannelData["fromServer"]
+		self.ircd.runActionStandard("join", channel, self, fromServer, users=[self], channels=[channel])
 		if joinChannelData["newChannel"]:
 			self.ircd.runActionStandard("channelcreate", channel, self, channels=[channel])
-		self.ircd.runActionStandard("join", channel, self, fromServer, users=[self], channels=[channel])
 	
 	def leaveChannel(self, channel: "IRCChannel", partType: str = "PART", typeData: Dict[Any, Any] = {}, fromServer: "IRCServer" = None) -> None:
 		"""
