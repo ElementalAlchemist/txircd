@@ -22,11 +22,8 @@ class IRCServer(IRCBase):
 		self._burstQueueCommands = []
 		self._burstQueueCommandPriorities = {}
 		self._burstQueueHandlers = {}
-		self._disconnected = False
 	
 	def handleCommand(self, command: str, params: List[str], prefix: str, tags: Dict[str, Optional[str]]) -> None:
-		if self._disconnected:
-			return # Don't process leftover commands for disconnected servers
 		if command not in self.ircd.serverCommands:
 			self.disconnect("Unknown command {}".format(command)) # If we receive a command we don't recognize, abort immediately to avoid a desync
 			return
@@ -107,8 +104,6 @@ class IRCServer(IRCBase):
 			self.ircd.log.warn("Removing server {server.serverID} ({server.name}): {reason}", server=self, reason=reason)
 		self.ircd.runActionStandard("serverquit", self, reason)
 		self.bursted = None
-		self._disconnected = True
-		self._endConnection()
 		if self.serverID in self.ircd.servers:
 			if netsplitFromServerName is None or netsplitToServerName is None:
 				netsplitFromServerName = self.ircd.servers[self.nextClosest].name if self.nextClosest in self.ircd.servers else self.ircd.name
@@ -137,13 +132,14 @@ class IRCServer(IRCBase):
 			for server in allServers:
 				if server.nextClosest == self.serverID:
 					server.disconnect(reason, netsplitFromServerName, netsplitToServerName)
+			self.ircd.recentlyQuitServers[self.serverID] = now()
 			del self.ircd.servers[self.serverID]
 			del self.ircd.serverNames[self.name]
-			self.ircd.recentlyQuitServers[self.serverID] = now()
 		if self._pinger.running:
 			self._pinger.stop()
 		if self._registrationTimeoutTimer.active():
 			self._registrationTimeoutTimer.cancel()
+		self._endConnection()
 	
 	def _endConnection(self) -> None:
 		self.transport.loseConnection()
